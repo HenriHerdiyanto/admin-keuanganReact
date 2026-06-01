@@ -1,0 +1,20 @@
+{
+    "programs": [
+        {
+            "kode_program": "1.02.01",
+            "nama_program": "PROGRAM PENUNJANG URUSAN PEMERINTAHAN DAERAH KABUPATEN/KOTA",
+            "id": "1"
+        },
+        {
+            "kode_program": "1.02.02",
+            "nama_program": "PROGRAM PEMENUHAN UPAYA KESEHATAN PERORANGAN DAN UPAYA KESEHATAN",
+            "id": "2"
+        },
+        {
+            "kode_program": "1.02.03",
+            "nama_program": "PROGRAM PENINGKATAN KAPASITAS SUMBER DAYA MANUSIA KESEHATAN",
+            "id": "3"
+        }
+    ],
+    "$schema": "./node_modules/json-server/schema.json"
+}

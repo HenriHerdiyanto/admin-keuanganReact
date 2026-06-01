@@ -1,0 +1,91 @@
+/* ===== SweetAlert2 Dark Mode Overrides ===== */
+body.dark-mode .swal2-popup {
+    background: var(--card-bg);
+    color: var(--text);
+}
+
+body.dark-mode .swal2-title {
+    color: var(--text);
+}
+
+body.dark-mode .swal2-html-container {
+    color: var(--text);
+}
+
+body.dark-mode .swal2-input,
+body.dark-mode .swal2-select,
+body.dark-mode .swal2-textarea {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+}
+
+body.dark-mode .swal2-input:focus,
+body.dark-mode .swal2-select:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+body.dark-mode .swal2-validation-message {
+    background: rgba(220, 53, 69, 0.15);
+    color: #f8d7da;
+}
+
+body.dark-mode .swal2-close {
+    color: var(--text-muted);
+}
+
+body.dark-mode .swal2-select option {
+    background: var(--card-bg);
+    color: var(--text);
+}
+
+/* ===== SweetAlert Form Custom ===== */
+.swal-form-label {
+    display: block;
+    text-align: left;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: var(--text-muted);
+}
+
+.swal-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: var(--bg);
+    color: var(--text);
+    transition: border-color 0.2s;
+}
+
+.swal-input:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15);
+}
+
+.swal-select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.swal-select:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15);
+}
+
+/* Animate form fields */
+.swal-field-group {
+    margin-bottom: 14px;
+    text-align: left;
+}

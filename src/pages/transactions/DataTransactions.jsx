@@ -1,0 +1,219 @@
+import { useState, useEffect, useContext } from "react";
+import Swal from "sweetalert2";
+import { ThemeContext } from "../../contexts/ThemeContext";
+
+function DataTransactions() {
+  const { darkMode, toggleDarkMode } = useContext(ThemeContext);
+  const [characters, setCharacters] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const getCharacters = async () => {
+      try {
+        const response = await fetch(
+          "https://dragonball-api.com/api/characters",
+        );
+
+        const data = await response.json();
+
+        setCharacters(data.items);
+        console.log(data.items);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getCharacters();
+  }, []);
+
+  const exportCSV = () => {
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      ["Name,Affiliation,Max Ki,Race,Gender"]
+        .concat(
+          characters.map(
+            (char) =>
+              `${char.name},${char.affiliation},${char.maxKi},${char.race},${char.gender}`,
+          ),
+        )
+        .join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "data_transaksi.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handlePrint = () => {
+    const printContent = document.getElementById("DataTransaction").outerHTML;
+    const printWindow = window.open("", "", "width=800,height=600");
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print Transaksi</title>
+        </head>
+        <body>
+          ${printContent}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+  };
+
+  return (
+    <div className="content-card">
+      <div className="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <h5 className="mb-0">
+          <i
+            className="bi bi-table me-2"
+            style={{ color: "var(--primary-light)" }}
+          ></i>
+          Data Transaksi
+        </h5>
+        <div className="d-flex gap-2">
+          <button className="btn btn-success btn-sm" onClick={exportCSV}>
+            <i className="bi bi-file-earmark-excel me-1"></i> CSV
+          </button>
+
+          <button className="btn btn-secondary btn-sm" onClick={handlePrint}>
+            <i className="bi bi-printer me-1"></i> Print
+          </button>
+          {/*
+          <button className="btn btn-primary btn-sm" onClick={openAddModal}>
+            <i className="bi bi-plus-circle me-1"></i> Tambah
+          </button> */}
+        </div>
+      </div>
+      <div className="card-body">
+        <div className="row g-2 mb-3 align-items-end">
+          <div className="col-md-3">
+            <input
+              type="text"
+              className="form-control form-control-sm"
+              placeholder="Cari transaksi..."
+            />
+          </div>
+          <div className="col-md-2">
+            <select className="form-select form-select-sm">
+              <option value="">Semua Kategori</option>
+            </select>
+          </div>
+          <div className="col-md-2">
+            <select className="form-select form-select-sm">
+              <option value="">Semua Status</option>
+            </select>
+          </div>
+          <div className="col-md-2">
+            <input
+              type="date"
+              className="form-control form-control-sm"
+              title="Tanggal awal"
+            />
+          </div>
+          <div className="col-md-2">
+            <input
+              type="date"
+              className="form-control form-control-sm"
+              title="Tanggal akhir"
+            />
+          </div>
+          <div className="col-md-1">
+            <button className="btn btn-outline-secondary btn-sm w-100">
+              <i className="bi bi-arrow-counterclockwise"></i>
+            </button>
+          </div>
+        </div>
+
+        <div className="table-responsive">
+          <table
+            id="DataTransaction"
+            className={`table table-hover align-middle ${
+              darkMode ? "table-dark text-light" : "table-light text-dark"
+            }`}
+          >
+            <thead className={darkMode ? "table-dark" : "table-light"}>
+              <tr>
+                <th style={{ width: "40px" }}>#</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Max Ki</th>
+                <th>Race</th>
+                <th>Gender</th>
+                <th style={{ width: "100px" }}>Aksi</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="7" className="text-center py-4">
+                    <div className="spinner-border text-primary" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                characters.map((char, index) => (
+                  <tr key={char.id}>
+                    <td>{index + 1}</td>
+
+                    <td>
+                      <img
+                        src={char.image}
+                        alt={char.name}
+                        style={{
+                          maxWidth: "50px",
+                        }}
+                      />
+                    </td>
+
+                    <td>
+                      ({char.name})
+                      <br />
+                      {char.affiliation}
+                    </td>
+
+                    <td>{char.maxKi}</td>
+
+                    <td>{char.race}</td>
+
+                    <td>{char.gender}</td>
+
+                    <td>
+                      <button
+                        className="btn btn-info btn-sm me-1"
+                        onClick={() =>
+                          Swal.fire(
+                            "Detail",
+                            JSON.stringify(char, null, 2),
+                            "info",
+                          )
+                        }
+                      >
+                        <i className="bi bi-eye"></i>
+                      </button>
+
+                      <button className="btn btn-warning btn-sm me-1">
+                        <i className="bi bi-pencil"></i>
+                      </button>
+
+                      <button className="btn btn-danger btn-sm">
+                        <i className="bi bi-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default DataTransactions;

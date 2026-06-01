@@ -1,0 +1,41 @@
+@media print {
+
+    /* 1. Menghilangkan Header & Footer Otomatis Browser */
+    @page {
+        size: auto;
+        margin: 15mm;
+    }
+
+    /* 2. Sembunyikan SEMUA elemen di aplikasi terlebih dahulu */
+    body * {
+        visibility: hidden;
+    }
+
+    /* 3. Tampilkan HANYA area tabel */
+    #print-area,
+    #print-area * {
+        visibility: visible;
+    }
+
+    /* 4. Paksa posisi tabel dimulai dari pojok kiri atas kertas */
+    #print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    /* ================================================================== */
+    /* 5. PERBAIKAN: Sembunyikan kolom berdasarkan CLASS, bukan urutan */
+    /* ================================================================== */
+    #print-area .no-print {
+        display: none !important;
+    }
+
+    /* 6. Pastikan warna teks tabel tetap hitam pekat */
+    #print-area table {
+        color: #000000 !important;
+        background-color: #ffffff !important;
+        border-collapse: collapse;
+    }
+}
