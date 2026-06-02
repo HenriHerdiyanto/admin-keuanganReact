@@ -7,6 +7,7 @@ import AdminLayout from "./pages/layout/AdminLayout";
 import Transactions from "./pages/Transactions";
 import DataProgramApbd from "./pages/apbd/DataProgramApbd";
 import DataKegiatanApbd from "./pages/apbd/DataKegiatanApbd";
+import SubKegiantanApbd from "./pages/apbd/SubKegiantanApbd";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -39,6 +40,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <DataKegiatanApbd />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/subkegiatan-apbd"
+            element={
+              <ProtectedRoute>
+                <SubKegiantanApbd />
               </ProtectedRoute>
             }
           />

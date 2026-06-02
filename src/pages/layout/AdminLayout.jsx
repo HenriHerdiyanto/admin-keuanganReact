@@ -3,6 +3,7 @@ import { Outlet, useNavigate, useLocation, NavLink } from "react-router-dom";
 
 import { ThemeContext } from "../../contexts/ThemeContext";
 import "../../assets/css/dashboard.css";
+import Swal from "sweetalert2";
 
 function AdminLayout() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ function AdminLayout() {
     programMenuOpen ||
     location.pathname === "/program-apbd" ||
     location.pathname === "/kegiatan-apbd" ||
-    location.pathname === "/sub-kegiatan-apbd";
+    location.pathname === "/subkegiatan-apbd";
 
   // =========================
   // AUTH CHECK
@@ -115,6 +116,19 @@ function AdminLayout() {
   // =========================
 
   const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: "Logout?",
+      text: "Apakah Anda yakin ingin keluar dari aplikasi?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ya, Logout",
+      cancelButtonText: "Batal",
+    });
+
+    if (!result.isConfirmed) return;
+
     try {
       const token = localStorage.getItem("token");
 
@@ -131,14 +145,32 @@ function AdminLayout() {
 
       const data = await response.json();
 
-      console.log(data);
-
       if (data.success) {
+        await Swal.fire({
+          icon: "success",
+          title: "Berhasil",
+          text: "Anda berhasil logout.",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+
         localStorage.clear();
         navigate("/");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Gagal",
+          text: data.message || "Logout gagal.",
+        });
       }
     } catch (error) {
       console.error(error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Terjadi Kesalahan",
+        text: "Tidak dapat terhubung ke server.",
+      });
     }
   };
 
@@ -255,6 +287,18 @@ function AdminLayout() {
                       }
                     >
                       Data Kegiatan
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink
+                      to="/subkegiatan-apbd"
+                      onClick={closeSidebarMobile}
+                      className={({ isActive }) =>
+                        `sidebar-link ${isActive ? "active" : ""}`
+                      }
+                    >
+                      Sub Kegiatan
                     </NavLink>
                   </li>
                 </ul>

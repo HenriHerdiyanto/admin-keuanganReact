@@ -1,0 +1,265 @@
+import React, { useContext, useEffect, useState } from "react";
+import { ThemeContext } from "../../contexts/ThemeContext";
+import { useSort } from "../../hooks/useSort";
+import { useFilteredData } from "../../hooks/useFilteredData";
+import FilterTable from "../filter/FilterTable";
+import ActionButtons from "../filter/ActionButtons";
+import { showToast } from "../../utils/toast";
+import { exportToExcel } from "../../utils/exportExcel";
+import FormSubKegiatanApbd from "./FormSubKegiatanApbd";
+import { confirmDelete } from "../../hooks/deleteHandler";
+
+function SubKegiantanApbd() {
+  const { darkMode } = useContext(ThemeContext);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editData, setEditData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const [subKegiatan, setSubKegiatan] = useState([]);
+  const [dataKegiatan, setDataKegiatan] = useState([]);
+
+  const {
+    filteredData,
+    searchTerm,
+    setSearchTerm,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    handleResetFilter,
+  } = useFilteredData(
+    subKegiatan,
+    ["kodeSubKegiatan", "namaSubKegiatan"],
+    "created_at",
+  );
+  const { handleSort, sortIndicator, getSortedData } = useSort();
+  const sortedData = getSortedData(filteredData);
+
+  const fetchKegiatan = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://20.2.2.230/simkeu/public/api/data_kegiatan_apbd",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!response.ok) throw new Error("Gagal mengambil data program");
+
+      const data = await response.json();
+      setDataKegiatan(data.data || []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchSubKegiatan = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://20.2.2.230/simkeu/public/api/data_sub_kegiatan_apbd",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!response.ok) throw new Error("Gagal mengambil data kegiatan");
+
+      const data = await response.json();
+      setSubKegiatan(data.data || []);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchKegiatan();
+    fetchSubKegiatan();
+  }, []);
+
+  const handleExportExcel = () => {
+    exportToExcel({
+      data: subKegiatan,
+      columns: [
+        { header: "Nama Kegiatan", accessor: "namaKegiatan" },
+        { header: "Kode Sub Kegiatan", accessor: "kodeSubKegiatan" },
+        { header: "Nama Sub Kegiatan", accessor: "namaSubKegiatan" },
+      ],
+      sheetName: "Sub Kegiatan APBD",
+      fileName: `Data_Sub_Kegiatan_APBD_${new Date().toISOString().split("T")[0]}`,
+    });
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  function openAddModal() {
+    setEditData(null);
+    setModalOpen(true);
+  }
+
+  function openEditModal(subkegiatan) {
+    setEditData(subkegiatan);
+    setModalOpen(true);
+  }
+
+  function handleDelete(id, namaSubKegiatan) {
+    confirmDelete({
+      url: "http://20.2.2.230/simkeu/public/api/data_sub_kegiatan_apbd",
+      id,
+      itemName: namaSubKegiatan,
+      onSuccess: () => {
+        setSubKegiatan((prev) => prev.filter((subkeg) => subkeg.id !== id));
+      },
+    });
+  }
+
+  const handleSaveSuccess = (subkegiatanData, editId) => {
+    if (editId) {
+      setSubKegiatan((prev) =>
+        prev.map((subkeg) => (subkeg.id === editId ? subkegiatanData : subkeg)),
+      );
+      showToast("Data berhasil diperbarui!", "success");
+    } else {
+      setSubKegiatan((prev) => [...prev, subkegiatanData]);
+      showToast("Data berhasil ditambahkan!", "success");
+    }
+  };
+  return (
+    <div className="content-card">
+      <div className="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <h5 className="mb-0">
+          <i
+            className="bi bi-table me-2"
+            style={{ color: "var(--primary-light)" }}
+          ></i>
+          Sub Kegiatan APBD
+        </h5>
+
+        <ActionButtons
+          onExportExcel={handleExportExcel}
+          onPrint={handlePrint}
+          onAdd={openAddModal}
+        />
+      </div>
+
+      <div className="card-body">
+        <FilterTable
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          onReset={handleResetFilter}
+        />
+
+        <div className="table-responsive" id="print-area">
+          <table
+            id="DataTransaction"
+            className={`table table-hover align-middle ${
+              darkMode ? "table-dark text-light" : "table-light text-dark"
+            }`}
+          >
+            <thead className={darkMode ? "table-dark" : "table-light"}>
+              <tr>
+                <th
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleSort("id")}
+                >
+                  No{sortIndicator("id")}
+                </th>
+                <th
+                  style={{ width: "30%", cursor: "pointer" }}
+                  onClick={() => handleSort("namaKegiatan")}
+                >
+                  Nama Kegiatan{sortIndicator("namaKegiatan")}
+                </th>
+                <th
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleSort("kodeSubKegiatan")}
+                >
+                  Kode Sub Kegiatan{sortIndicator("kodeSubKegiatan")}
+                </th>
+                <th
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleSort("namaSubKegiatan")}
+                >
+                  Nama Sub Kegiatan{sortIndicator("namaSubKegiatan")}
+                </th>
+                <th className="no-print" style={{ width: "100px" }}>
+                  Aksi
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="5" className="text-center">
+                    <div className="spinner-border" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                sortedData.map((subkegiatan) => (
+                  <tr key={subkegiatan.id}>
+                    <td>{subkegiatan.id}</td>
+                    <td>{subkegiatan.namaKegiatan}</td>
+                    <td>{subkegiatan.kodeSubKegiatan}</td>
+                    <td>{subkegiatan.namaSubKegiatan}</td>
+                    <td className="no-print">
+                      <button
+                        className="btn btn-sm btn-primary me-1"
+                        onClick={() => openEditModal(subkegiatan)}
+                      >
+                        <i className="bi bi-pencil"></i>
+                      </button>
+
+                      <button
+                        className="btn btn-sm btn-danger"
+                        onClick={() =>
+                          handleDelete(
+                            subkegiatan.id,
+                            subkegiatan.namaSubKegiatan,
+                          )
+                        }
+                      >
+                        <i className="bi bi-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <FormSubKegiatanApbd
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          editData={editData}
+          onSaveSuccess={handleSaveSuccess}
+          showToast={showToast}
+          dataKegiatan={dataKegiatan}
+        />
+      </div>
+    </div>
+  );
+}
+
+export default SubKegiantanApbd;

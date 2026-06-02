@@ -5,6 +5,7 @@ import LoadingSkeleton from "./dashboard/LoadingSkeleton";
 
 import DataProgramApbd from "./apbd/DataProgramApbd";
 import DataKegiatanApbd from "./apbd/DataKegiatanApbd";
+import SubKegiantanApbd from "./apbd/SubKegiantanApbd";
 
 function ProgramApbd() {
   const [loading, setLoading] = useState(true);
@@ -20,6 +21,7 @@ function ProgramApbd() {
     <>
       {location.pathname === "/program-apbd" && <DataProgramApbd />}
       {location.pathname === "/kegiatan-apbd" && <DataKegiatanApbd />}
+      {location.pathname === "/subkegiatan-apbd" && <SubKegiantanApbd />}
     </>
   );
 }
