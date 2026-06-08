@@ -31,7 +31,8 @@ function AdminLayout() {
     programMenuOpen ||
     location.pathname === "/program-apbd" ||
     location.pathname === "/kegiatan-apbd" ||
-    location.pathname === "/subkegiatan-apbd";
+    location.pathname === "/subkegiatan-apbd" ||
+    location.pathname === "/laporan-apbd";
 
   // =========================
   // AUTH CHECK
@@ -299,6 +300,18 @@ function AdminLayout() {
                       }
                     >
                       Sub Kegiatan
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink
+                      to="/laporan-apbd"
+                      onClick={closeSidebarMobile}
+                      className={({ isActive }) =>
+                        `sidebar-link ${isActive ? "active" : ""}`
+                      }
+                    >
+                      Laporan APBD
                     </NavLink>
                   </li>
                 </ul>

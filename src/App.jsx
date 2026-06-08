@@ -9,6 +9,7 @@ import DataProgramApbd from "./pages/apbd/DataProgramApbd";
 import DataKegiatanApbd from "./pages/apbd/DataKegiatanApbd";
 import SubKegiantanApbd from "./pages/apbd/SubKegiantanApbd";
 import ProtectedRoute from "./components/ProtectedRoute";
+import LaporanApbd from "./pages/apbd/LaporanApbd";
 
 function App() {
   return (
@@ -49,6 +50,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <SubKegiantanApbd />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/laporan-apbd"
+            element={
+              <ProtectedRoute>
+                <LaporanApbd />
               </ProtectedRoute>
             }
           />
