@@ -18,6 +18,10 @@ function SubKegiantanApbd() {
   const [subKegiatan, setSubKegiatan] = useState([]);
   const [dataKegiatan, setDataKegiatan] = useState([]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+  const [totalData, setTotalData] = useState(0);
+
   const {
     filteredData,
     searchTerm,
@@ -35,35 +39,14 @@ function SubKegiantanApbd() {
   const { handleSort, sortIndicator, getSortedData } = useSort();
   const sortedData = getSortedData(filteredData);
 
-  const fetchKegiatan = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        "http://20.2.2.230/simkeu/public/api/data_kegiatan_apbd",
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      if (!response.ok) throw new Error("Gagal mengambil data program");
-
-      const data = await response.json();
-      setDataKegiatan(data.data || []);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchSubKegiatan = async () => {
+  const fetchSubKegiatan = async (page = 1) => {
     try {
       setLoading(true);
+
       const token = localStorage.getItem("token");
+
       const response = await fetch(
-        "http://20.2.2.230/simkeu/public/api/data_sub_kegiatan_apbd",
+        `http://20.2.2.230/simkeu/public/api/data_sub_kegiatan_apbd?page=${page}`,
         {
           method: "GET",
           headers: {
@@ -75,8 +58,16 @@ function SubKegiantanApbd() {
 
       if (!response.ok) throw new Error("Gagal mengambil data kegiatan");
 
-      const data = await response.json();
-      setSubKegiatan(data.data || []);
+      const result = await response.json();
+
+      const paginator = result.data || {};
+      setSubKegiatan(Array.isArray(paginator.data) ? paginator.data : []);
+      setCurrentPage(paginator.current_page || 1);
+      setLastPage(paginator.last_page || 1);
+      setTotalData(paginator.total || 0);
+
+      const kegiatanPaginator = result.dataKegiatan || {};
+      setDataKegiatan(Array.isArray(kegiatanPaginator.data) ? kegiatanPaginator.data : []);
     } catch (error) {
       console.log(error);
     } finally {
@@ -85,9 +76,8 @@ function SubKegiantanApbd() {
   };
 
   useEffect(() => {
-    fetchKegiatan();
-    fetchSubKegiatan();
-  }, []);
+    fetchSubKegiatan(currentPage);
+  }, [currentPage]);
 
   const handleExportExcel = () => {
     exportToExcel({
@@ -134,10 +124,27 @@ function SubKegiantanApbd() {
       );
       showToast("Data berhasil diperbarui!", "success");
     } else {
-      setSubKegiatan((prev) => [...prev, subkegiatanData]);
+      fetchSubKegiatan(currentPage);
       showToast("Data berhasil ditambahkan!", "success");
     }
   };
+
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
+  };
+
+  const handleStartDateChange = (value) => {
+    setStartDate(value);
+  };
+
+  const handleEndDateChange = (value) => {
+    setEndDate(value);
+  };
+
+  const handleReset = () => {
+    handleResetFilter();
+  };
+
   return (
     <div className="content-card">
       <div className="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
@@ -159,12 +166,12 @@ function SubKegiantanApbd() {
       <div className="card-body">
         <FilterTable
           searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
+          setSearchTerm={handleSearchChange}
           startDate={startDate}
-          setStartDate={setStartDate}
+          setStartDate={handleStartDateChange}
           endDate={endDate}
-          setEndDate={setEndDate}
-          onReset={handleResetFilter}
+          setEndDate={handleEndDateChange}
+          onReset={handleReset}
         />
 
         <div className="table-responsive" id="print-area">
@@ -216,9 +223,9 @@ function SubKegiantanApbd() {
                   </td>
                 </tr>
               ) : (
-                sortedData.map((subkegiatan) => (
+                sortedData.map((subkegiatan, index) => (
                   <tr key={subkegiatan.id}>
-                    <td>{subkegiatan.id}</td>
+                    <td>{(currentPage - 1) * 10 + index + 1}</td>
                     <td>{subkegiatan.namaKegiatan}</td>
                     <td>{subkegiatan.kodeSubKegiatan}</td>
                     <td>{subkegiatan.namaSubKegiatan}</td>
@@ -247,6 +254,33 @@ function SubKegiantanApbd() {
               )}
             </tbody>
           </table>
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <div>
+              Total Data : <strong>{totalData}</strong>
+            </div>
+
+            <div>
+              <span className="mx-2">
+                Halaman {currentPage} dari {lastPage} |
+              </span>
+
+              <button
+                className="btn btn-secondary me-2"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                Previous
+              </button>
+
+              <button
+                className="btn btn-secondary ms-2"
+                disabled={currentPage === lastPage}
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                Next
+              </button>
+            </div>
+          </div>
         </div>
 
         <FormSubKegiatanApbd

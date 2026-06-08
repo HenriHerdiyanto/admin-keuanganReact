@@ -16,10 +16,12 @@ function FormKegiatanApbd({
     namaKegiatan: "",
   });
 
-  const options = dataProgram.map((program) => ({
-    value: program.idProgram,
-    label: program.namaProgram,
-  }));
+  const options = Array.isArray(dataProgram)
+    ? dataProgram.map((program) => ({
+        value: program.idProgram,
+        label: program.namaProgram,
+      }))
+    : [];
 
   useEffect(() => {
     if (editData) {

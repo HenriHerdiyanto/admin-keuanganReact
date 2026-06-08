@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import Swal from "sweetalert2";
 import { ThemeContext } from "../../contexts/ThemeContext";
 
@@ -6,6 +6,13 @@ function DataTransactions() {
   const { darkMode, toggleDarkMode } = useContext(ThemeContext);
   const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [search, setSearch] = useState("");
+  const [minDate, setMinDate] = useState("");
+  const [maxDate, setMaxDate] = useState("");
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+
   useEffect(() => {
     const getCharacters = async () => {
       try {
@@ -16,7 +23,6 @@ function DataTransactions() {
         const data = await response.json();
 
         setCharacters(data.items);
-        console.log(data.items);
       } catch (error) {
         console.log(error);
       } finally {
@@ -26,6 +32,26 @@ function DataTransactions() {
 
     getCharacters();
   }, []);
+
+  const filtered = useMemo(() => {
+    let result = [...characters];
+    if (search) {
+      const q = search.toLowerCase();
+      result = result.filter(
+        (r) =>
+          (r.name && r.name.toLowerCase().includes(q)) ||
+          (r.race && r.race.toLowerCase().includes(q)) ||
+          (r.affiliation && r.affiliation.toLowerCase().includes(q)),
+      );
+    }
+    if (minDate) result = result.filter((r) => r.createdAt >= minDate);
+    if (maxDate) result = result.filter((r) => r.createdAt <= maxDate);
+    return result;
+  }, [characters, search, minDate, maxDate]);
+
+  const totalPages = Math.ceil(filtered.length / pageSize);
+  const safePage = totalPages > 0 ? Math.min(page, totalPages) : 1;
+  const paged = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
 
   const exportCSV = () => {
     const csvContent =
@@ -90,39 +116,38 @@ function DataTransactions() {
       </div>
       <div className="card-body">
         <div className="row g-2 mb-3 align-items-end">
-          <div className="col-md-3">
+          <div className="col-md-5">
             <input
               type="text"
               className="form-control form-control-sm"
-              placeholder="Cari transaksi..."
+              placeholder="Cari nama, race, atau afiliasi..."
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
             />
           </div>
-          <div className="col-md-2">
-            <select className="form-select form-select-sm">
-              <option value="">Semua Kategori</option>
-            </select>
-          </div>
-          <div className="col-md-2">
-            <select className="form-select form-select-sm">
-              <option value="">Semua Status</option>
-            </select>
-          </div>
-          <div className="col-md-2">
+          <div className="col-md-3">
             <input
               type="date"
               className="form-control form-control-sm"
               title="Tanggal awal"
+              value={minDate}
+              onChange={(e) => { setMinDate(e.target.value); setPage(1); }}
             />
           </div>
-          <div className="col-md-2">
+          <div className="col-md-3">
             <input
               type="date"
               className="form-control form-control-sm"
               title="Tanggal akhir"
+              value={maxDate}
+              onChange={(e) => { setMaxDate(e.target.value); setPage(1); }}
             />
           </div>
           <div className="col-md-1">
-            <button className="btn btn-outline-secondary btn-sm w-100">
+            <button
+              className="btn btn-outline-secondary btn-sm w-100"
+              onClick={() => { setSearch(""); setMinDate(""); setMaxDate(""); setPage(1); }}
+            >
               <i className="bi bi-arrow-counterclockwise"></i>
             </button>
           </div>
@@ -156,10 +181,16 @@ function DataTransactions() {
                     </div>
                   </td>
                 </tr>
+              ) : paged.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="text-center text-muted py-4">
+                    Tidak ada data
+                  </td>
+                </tr>
               ) : (
-                characters.map((char, index) => (
+                paged.map((char, index) => (
                   <tr key={char.id}>
-                    <td>{index + 1}</td>
+                    <td>{(safePage - 1) * pageSize + index + 1}</td>
 
                     <td>
                       <img
@@ -210,6 +241,32 @@ function DataTransactions() {
               )}
             </tbody>
           </table>
+        </div>
+
+        <div className="d-flex justify-content-between align-items-center mt-3">
+          <small className="text-muted">
+            Menampilkan{" "}
+            {filtered.length === 0 ? 0 : (safePage - 1) * pageSize + 1}-
+            {Math.min(safePage * pageSize, filtered.length)} dari{" "}
+            {filtered.length} data
+          </small>
+          {totalPages > 1 && (
+            <nav>
+              <ul className="pagination pagination-sm mb-0">
+                <li className={"page-item" + (safePage <= 1 ? " disabled" : "")}>
+                  <button className="page-link" onClick={() => setPage(page - 1)} disabled={safePage <= 1}>&laquo;</button>
+                </li>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                  <li key={num} className={"page-item" + (num === safePage ? " active" : "")}>
+                    <button className="page-link" onClick={() => setPage(num)}>{num}</button>
+                  </li>
+                ))}
+                <li className={"page-item" + (safePage >= totalPages ? " disabled" : "")}>
+                  <button className="page-link" onClick={() => setPage(page + 1)} disabled={safePage >= totalPages}>&raquo;</button>
+                </li>
+              </ul>
+            </nav>
+          )}
         </div>
       </div>
     </div>

@@ -16,10 +16,12 @@ function FormSubKegiatanApbd({
     namaSubKegiatan: "",
   });
 
-  const options = dataKegiatan.map((item) => ({
-    value: item.id,
-    label: item.namaKegiatan,
-  }));
+  const options = Array.isArray(dataKegiatan)
+    ? dataKegiatan.map((item) => ({
+        value: item.id,
+        label: item.namaKegiatan,
+      }))
+    : [];
   useEffect(() => {
     if (editData) {
       setForm({
