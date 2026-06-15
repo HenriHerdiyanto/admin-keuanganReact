@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../../contexts/ThemeContext";
-import FormKegiatanApbd from "./FormKegiatanApbd";
+import FormKegiatanApbd from "../../components/apbd/FormKegiatanApbd";
 import FilterTable from "../filter/FilterTable";
 import ActionButtons from "../filter/ActionButtons";
 import { confirmDelete } from "../../hooks/deleteHandler";

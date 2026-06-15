@@ -6,7 +6,7 @@ import FilterTable from "../filter/FilterTable";
 import ActionButtons from "../filter/ActionButtons";
 import { showToast } from "../../utils/toast";
 import { exportToExcel } from "../../utils/exportExcel";
-import FormSubKegiatanApbd from "./FormSubKegiatanApbd";
+import FormSubKegiatanApbd from "../../components/apbd/FormSubKegiatanApbd";
 import { confirmDelete } from "../../hooks/deleteHandler";
 
 function SubKegiantanApbd() {
