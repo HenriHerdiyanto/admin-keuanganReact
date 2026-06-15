@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "../../contexts/ThemeContext";
+import { useEffect, useState } from "react";
 import FormKegiatanApbd from "../../components/apbd/FormKegiatanApbd";
 import FilterTable from "../filter/FilterTable";
 import ActionButtons from "../filter/ActionButtons";
@@ -11,7 +10,6 @@ import { showToast } from "../../utils/toast";
 import "../../index.css";
 
 function DataKegiatanApbd() {
-  const { darkMode } = useContext(ThemeContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -201,11 +199,9 @@ function DataKegiatanApbd() {
         <div className="table-responsive" id="print-area">
           <table
             id="DataTransaction"
-            className={`table table-hover align-middle ${
-              darkMode ? "table-dark text-light" : "table-light text-dark"
-            }`}
+            className="table table-hover align-middle table-themed"
           >
-            <thead className={darkMode ? "table-dark" : "table-light"}>
+            <thead>
               <tr>
                 <th
                   style={{ cursor: "pointer" }}

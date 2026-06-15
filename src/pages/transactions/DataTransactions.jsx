@@ -156,11 +156,9 @@ function DataTransactions() {
         <div className="table-responsive">
           <table
             id="DataTransaction"
-            className={`table table-hover align-middle ${
-              darkMode ? "table-dark text-light" : "table-light text-dark"
-            }`}
+            className="table table-hover align-middle table-themed"
           >
-            <thead className={darkMode ? "table-dark" : "table-light"}>
+            <thead>
               <tr>
                 <th style={{ width: "40px" }}>#</th>
                 <th>Image</th>

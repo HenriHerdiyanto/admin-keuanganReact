@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "../../contexts/ThemeContext";
+import { useEffect, useState } from "react";
 import FormKegiatanBlud from "../../components/blud/FormKegiatanBlud";
 import FilterTable from "../filter/FilterTable";
 import ActionButtons from "../filter/ActionButtons";
@@ -11,7 +10,6 @@ import { showToast } from "../../utils/toast";
 import "../../index.css";
 
 function DataKegiatanBlud() {
-  const { darkMode } = useContext(ThemeContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -201,11 +199,9 @@ function DataKegiatanBlud() {
         <div className="table-responsive" id="print-area">
           <table
             id="DataTransaction"
-            className={`table table-hover align-middle ${
-              darkMode ? "table-dark text-light" : "table-light text-dark"
-            }`}
+            className="table table-hover align-middle table-themed"
           >
-            <thead className={darkMode ? "table-dark" : "table-light"}>
+            <thead>
               <tr>
                 <th
                   style={{ cursor: "pointer" }}
@@ -231,6 +227,12 @@ function DataKegiatanBlud() {
                 >
                   Nama Kegiatan{sortIndicator("namaKegiatan")}
                 </th>
+                <th
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleSort("created_at")}
+                >
+                  Tanggal Input{sortIndicator("created_at")}
+                </th>
                 <th className="no-print" style={{ width: "100px" }}>
                   Aksi
                 </th>
@@ -253,6 +255,7 @@ function DataKegiatanBlud() {
                     <td>{kegiatan.nama_program}</td>
                     <td>{kegiatan.kodeKegiatan}</td>
                     <td>{kegiatan.namaKegiatan}</td>
+                    <td>{kegiatan.created_at}</td>
                     <td className="no-print">
                       <button
                         className="btn btn-sm btn-primary me-1"

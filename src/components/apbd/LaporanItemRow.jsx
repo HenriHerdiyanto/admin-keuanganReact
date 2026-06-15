@@ -66,7 +66,7 @@ function LaporanItemRow({ item, isExpanded, onToggle }) {
         >
           {item.details && item.details.length > 0 ? (
             <table
-              className={`table table-sm mb-0 ${darkMode ? "table-dark" : ""}`}
+              className="table table-sm mb-0 table-themed"
               style={{ fontSize: "0.8rem" }}
             >
               <thead>

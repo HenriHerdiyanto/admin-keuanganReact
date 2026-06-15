@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "../../contexts/ThemeContext";
+import React, { useEffect, useState } from "react";
 import { useSort } from "../../hooks/useSort";
 import { useFilteredData } from "../../hooks/useFilteredData";
 import FilterTable from "../filter/FilterTable";
@@ -10,7 +9,6 @@ import FormSubKegiatanApbd from "../../components/apbd/FormSubKegiatanApbd";
 import { confirmDelete } from "../../hooks/deleteHandler";
 
 function SubKegiantanApbd() {
-  const { darkMode } = useContext(ThemeContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -177,11 +175,9 @@ function SubKegiantanApbd() {
         <div className="table-responsive" id="print-area">
           <table
             id="DataTransaction"
-            className={`table table-hover align-middle ${
-              darkMode ? "table-dark text-light" : "table-light text-dark"
-            }`}
+            className="table table-hover align-middle table-themed"
           >
-            <thead className={darkMode ? "table-dark" : "table-light"}>
+            <thead>
               <tr>
                 <th
                   style={{ cursor: "pointer" }}

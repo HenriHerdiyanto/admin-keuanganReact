@@ -710,131 +710,42 @@ body.dark-mode .stat-card:hover {
     font-weight: 600;
 }
 
-/* ===== DATATABLE ===== */
-.dataTables_wrapper .dataTables_filter input {
-    border: 1px solid var(--border) !important;
-    border-radius: 8px !important;
-    padding: 6px 12px !important;
-    background: var(--bg) !important;
-    color: var(--text) !important;
-}
-
-.dataTables_wrapper .dataTables_filter input:focus {
-    border-color: var(--primary-light) !important;
-    outline: none !important;
-}
-
-.dataTables_wrapper .dataTables_length select {
-    border: 1px solid var(--border) !important;
-    border-radius: 8px !important;
-    padding: 4px 8px !important;
-    background: var(--bg) !important;
-    color: var(--text) !important;
-}
-
-.dataTables_wrapper .dataTables_info,
-.dataTables_wrapper .dataTables_length,
-.dataTables_wrapper .dataTables_filter label {
-    color: var(--text-muted) !important;
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    border-radius: 8px !important;
-    padding: 4px 12px !important;
-    margin: 0 2px !important;
-    color: var(--text-muted) !important;
-    border: 1px solid var(--border) !important;
-    background: var(--card-bg) !important;
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button.current {
-    background: var(--primary) !important;
-    border-color: var(--primary) !important;
-    color: white !important;
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-    background: var(--primary-bg) !important;
-    border-color: var(--primary-light) !important;
-    color: var(--primary) !important;
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-    background: var(--primary-dark) !important;
-    color: white !important;
-}
-
-.dataTables_wrapper table.dataTable {
+/* ===== THEMED TABLE ===== */
+.table-themed {
+    --bs-table-bg: var(--card-bg);
+    --bs-table-color: var(--text);
+    --bs-table-border-color: var(--border);
+    --bs-table-hover-bg: var(--primary-bg);
+    --bs-table-hover-color: var(--text);
     border-color: var(--border) !important;
 }
 
-table.dataTable thead th {
-    background: var(--bg) !important;
-    color: var(--text) !important;
-    border-bottom: 2px solid var(--border) !important;
+.table-themed thead {
+    background: var(--bg);
+    color: var(--text);
 }
 
-table.dataTable tbody td {
-    color: var(--text) !important;
-    border-color: var(--border) !important;
+.table-themed thead th {
+    background: var(--bg);
+    color: var(--text);
+    border-bottom: 2px solid var(--border);
 }
 
-table.dataTable tbody tr:hover {
-    background: var(--primary-bg) !important;
+.table-themed tbody td {
+    color: var(--text);
+    border-color: var(--border);
 }
 
-table.dataTable tbody tr.even {
-    background: rgba(0, 0, 0, 0.02);
+.table-themed tbody tr:hover {
+    --bs-table-hover-bg: var(--primary-bg);
 }
 
-body.dark-mode table.dataTable tbody tr.even {
+body.dark-mode .table-themed tbody tr:nth-child(even) {
     background: rgba(255, 255, 255, 0.02);
 }
 
-/* Pagination lebih kecil & modern */
-.dataTables_wrapper .dataTables_paginate .pagination {
-    gap: 4px;
-    margin-top: 10px;
-}
-
-.dataTables_wrapper .dataTables_paginate .page-link {
-    padding: 4px 10px;
-    font-size: 13px;
-    border-radius: 8px;
-    border: none;
-    color: #555;
-    background: #f1f3f5;
-    transition: all 0.2s ease;
-}
-
-.dataTables_wrapper .dataTables_paginate .page-link:hover {
-    background: #0d6efd;
-    color: white;
-}
-
-.dataTables_wrapper .dataTables_paginate .page-item.active .page-link {
-    background: #0d6efd;
-    color: white;
-    font-weight: 600;
-    box-shadow: 0 2px 6px rgba(13, 110, 253, 0.25);
-}
-
-.dataTables_wrapper .dataTables_paginate .page-item.disabled .page-link {
-    background: #e9ecef;
-    color: #adb5bd;
-}
-
-/* Info text */
-.dataTables_info {
-    font-size: 13px;
-    color: #6c757d;
-}
-
-
-
-.dt-buttons .btn {
-    border-radius: 8px !important;
-    font-size: 0.8rem !important;
+.table-themed tbody tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.02);
 }
 
 /* ===== MODAL ===== */

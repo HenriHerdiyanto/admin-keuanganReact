@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import { ThemeContext } from "../../contexts/ThemeContext";
+import React from "react";
 import FilterTable from "../../pages/filter/FilterTable";
 
 function formatRupiah(n) {
@@ -29,8 +28,6 @@ function LaporanProgramTable({
   onPageChange,
   onDetail,
 }) {
-  const { darkMode } = useContext(ThemeContext);
-
   return (
     <>
       <FilterTable
@@ -46,9 +43,9 @@ function LaporanProgramTable({
       <div className="table-responsive" id="print-area">
         <table
           id="DataTransaction"
-          className={`table table-hover align-middle ${darkMode ? "table-dark text-light" : "table-light text-dark"}`}
+          className="table table-hover align-middle table-themed"
         >
-          <thead className={darkMode ? "table-dark" : "table-light"}>
+          <thead>
             <tr>
               <th
                 style={{ cursor: "pointer" }}

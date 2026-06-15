@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import { ThemeContext } from "../../contexts/ThemeContext";
+import React from "react";
 import FilterTable from "../../pages/filter/FilterTable";
 
 function formatRupiah(n) {
@@ -29,8 +28,6 @@ function LaporanProgramTable({
   onPageChange,
   onDetail,
 }) {
-  const { darkMode } = useContext(ThemeContext);
-
   return (
     <>
       <FilterTable
@@ -46,9 +43,9 @@ function LaporanProgramTable({
       <div className="table-responsive" id="print-area">
         <table
           id="DataTransaction"
-          className={`table table-hover align-middle ${darkMode ? "table-dark text-light" : "table-light text-dark"}`}
+          className="table table-hover align-middle table-themed"
         >
-          <thead className={darkMode ? "table-dark" : "table-light"}>
+          <thead>
             <tr>
               <th
                 style={{ cursor: "pointer" }}
@@ -75,6 +72,13 @@ function LaporanProgramTable({
               >
                 Jumlah Transaksi{sortIndicator("jumlah_transaksi")}
               </th>
+              <th
+                style={{ cursor: "pointer" }}
+                onClick={() => handleSort("created_at")}
+                className="text-center"
+              >
+                Tanggal Input{sortIndicator("created_at")}
+              </th>
               <th className="no-print text-center">Aksi</th>
             </tr>
           </thead>
@@ -94,6 +98,7 @@ function LaporanProgramTable({
                   <td>{program.namaProgram}</td>
                   <td>{formatRupiah(program.total_harga)}</td>
                   <td className="text-center">{program.jumlah_transaksi}</td>
+                  <td className="text-center">{program.created_at}</td>
                   <td className="text-center">
                     <button
                       className="btn btn-sm btn-info"

@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "../../contexts/ThemeContext";
+import { useEffect, useState } from "react";
 import FormProgramApbd from "../../components/apbd/FormProgramApbd";
 import FilterTable from "../filter/FilterTable";
 import ActionButtons from "../filter/ActionButtons";
@@ -11,7 +10,6 @@ import { showToast } from "../../utils/toast";
 import "../../index.css";
 
 function DataApbd() {
-  const { darkMode } = useContext(ThemeContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -165,9 +163,9 @@ function DataApbd() {
         <div className="table-responsive" id="print-area">
           <table
             id="DataTransaction"
-            className={`table table-hover align-middle ${darkMode ? "table-dark text-light" : "table-light text-dark"}`}
+            className="table table-hover align-middle table-themed"
           >
-            <thead className={darkMode ? "table-dark" : "table-light"}>
+            <thead>
               <tr>
                 <th
                   style={{ cursor: "pointer" }}

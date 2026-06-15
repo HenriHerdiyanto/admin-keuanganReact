@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "../../contexts/ThemeContext";
+import React, { useEffect, useState } from "react";
 import { useSort } from "../../hooks/useSort";
 import { useFilteredData } from "../../hooks/useFilteredData";
 import FilterTable from "../filter/FilterTable";
@@ -10,7 +9,6 @@ import FormSubKegiatanBlud from "../../components/blud/FormSubKegiatanBlud";
 import { confirmDelete } from "../../hooks/deleteHandler";
 
 function SubKegiatanBlud() {
-  const { darkMode } = useContext(ThemeContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -55,7 +53,7 @@ function SubKegiatanBlud() {
           },
         },
       );
-
+      console.log(token);
       if (!response.ok) throw new Error("Gagal mengambil data kegiatan");
 
       const result = await response.json();
@@ -67,7 +65,9 @@ function SubKegiatanBlud() {
       setTotalData(paginator.total || 0);
 
       const kegiatanPaginator = result.dataKegiatan || {};
-      setDataKegiatan(Array.isArray(kegiatanPaginator.data) ? kegiatanPaginator.data : []);
+      setDataKegiatan(
+        Array.isArray(kegiatanPaginator.data) ? kegiatanPaginator.data : [],
+      );
     } catch (error) {
       console.log(error);
     } finally {
@@ -177,11 +177,9 @@ function SubKegiatanBlud() {
         <div className="table-responsive" id="print-area">
           <table
             id="DataTransaction"
-            className={`table table-hover align-middle ${
-              darkMode ? "table-dark text-light" : "table-light text-dark"
-            }`}
+            className="table table-hover align-middle table-themed"
           >
-            <thead className={darkMode ? "table-dark" : "table-light"}>
+            <thead>
               <tr>
                 <th
                   style={{ cursor: "pointer" }}
@@ -207,6 +205,12 @@ function SubKegiatanBlud() {
                 >
                   Nama Sub Kegiatan{sortIndicator("namaSubKegiatan")}
                 </th>
+                <th
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleSort("created_at")}
+                >
+                  Tanggal Input{sortIndicator("created_at")}
+                </th>
                 <th className="no-print" style={{ width: "100px" }}>
                   Aksi
                 </th>
@@ -229,6 +233,7 @@ function SubKegiatanBlud() {
                     <td>{subkegiatan.namaKegiatan}</td>
                     <td>{subkegiatan.kodeSubKegiatan}</td>
                     <td>{subkegiatan.namaSubKegiatan}</td>
+                    <td>{subkegiatan.created_at}</td>
                     <td className="no-print">
                       <button
                         className="btn btn-sm btn-primary me-1"
