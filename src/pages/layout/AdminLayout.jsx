@@ -18,6 +18,7 @@ function AdminLayout() {
   const [profileOpen, setProfileOpen] = useState(false);
 
   const [programMenuOpen, setProgramMenuOpen] = useState(false);
+  const [bludMenuOpen, setBludMenuOpen] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   const notifRef = useRef(null);
@@ -33,6 +34,13 @@ function AdminLayout() {
     location.pathname === "/kegiatan-apbd" ||
     location.pathname === "/subkegiatan-apbd" ||
     location.pathname === "/laporan-apbd";
+
+  const isBludMenuOpen =
+    bludMenuOpen ||
+    location.pathname === "/program-blud" ||
+    location.pathname === "/kegiatan-blud" ||
+    location.pathname === "/subkegiatan-blud" ||
+    location.pathname === "/laporan-blud";
 
   // =========================
   // AUTH CHECK
@@ -184,6 +192,7 @@ function AdminLayout() {
       setSidebarShow(false);
     }
     setProgramMenuOpen(false);
+    setBludMenuOpen(false);
   }
 
   // =========================
@@ -192,6 +201,14 @@ function AdminLayout() {
 
   function toggleProgramMenu() {
     setProgramMenuOpen((prev) => !prev);
+  }
+
+  // =========================
+  // TOGGLE BLUD MENU
+  // =========================
+
+  function toggleBludMenu() {
+    setBludMenuOpen((prev) => !prev);
   }
 
   // =========================
@@ -312,6 +329,78 @@ function AdminLayout() {
                       }
                     >
                       Laporan APBD
+                    </NavLink>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+            {/* PROGRAM BLUD */}
+            <li className="sidebar-item">
+              <div
+                className={`sidebar-link d-flex justify-content-between align-items-center ${
+                  isBludMenuOpen ? "active" : ""
+                }`}
+                onClick={toggleBludMenu}
+                style={{ cursor: "pointer" }}
+              >
+                <div>
+                  <i className="bi bi-arrow-left-right me-2"></i>
+                  <span>Program BLUD</span>
+                </div>
+
+                <i
+                  className={`bi bi-chevron-down ${isBludMenuOpen ? "rotated" : ""}`}
+                ></i>
+              </div>
+
+              <div className={`submenu ${isBludMenuOpen ? "open" : ""}`}>
+                <ul className="list-unstyled ps-4 mt-2">
+                  <li>
+                    <NavLink
+                      to="/program-blud"
+                      onClick={closeSidebarMobile}
+                      className={({ isActive }) =>
+                        `sidebar-link ${isActive ? "active" : ""}`
+                      }
+                    >
+                      Data Program
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink
+                      to="/kegiatan-blud"
+                      onClick={closeSidebarMobile}
+                      className={({ isActive }) =>
+                        `sidebar-link ${isActive ? "active" : ""}`
+                      }
+                    >
+                      Data Kegiatan
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink
+                      to="/subkegiatan-blud"
+                      onClick={closeSidebarMobile}
+                      className={({ isActive }) =>
+                        `sidebar-link ${isActive ? "active" : ""}`
+                      }
+                    >
+                      Sub Kegiatan
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink
+                      to="/laporan-blud"
+                      onClick={closeSidebarMobile}
+                      className={({ isActive }) =>
+                        `sidebar-link ${isActive ? "active" : ""}`
+                      }
+                    >
+                      Laporan BLUD
                     </NavLink>
                   </li>
                 </ul>

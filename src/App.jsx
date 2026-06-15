@@ -8,8 +8,13 @@ import Transactions from "./pages/Transactions";
 import DataProgramApbd from "./pages/apbd/DataProgramApbd";
 import DataKegiatanApbd from "./pages/apbd/DataKegiatanApbd";
 import SubKegiantanApbd from "./pages/apbd/SubKegiantanApbd";
-import ProtectedRoute from "./components/ProtectedRoute";
 import LaporanApbd from "./pages/apbd/LaporanApbd";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+import DataProgramBlud from "./pages/blud/DataProgramBlud";
+import DataKegiatanBlud from "./pages/blud/DataKegiatanBlud";
+import SubKegiatanBlud from "./pages/blud/SubKegiatanBlud";
+import LaporanBlud from "./pages/blud/LaporanBlud";
 
 function App() {
   return (
@@ -26,7 +31,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-
+          {/* route APBD */}
           <Route
             path="/program-apbd"
             element={
@@ -59,6 +64,43 @@ function App() {
             element={
               <ProtectedRoute>
                 <LaporanApbd />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* route BLUD */}
+          <Route
+            path="/program-blud"
+            element={
+              <ProtectedRoute>
+                <DataProgramBlud />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/kegiatan-blud"
+            element={
+              <ProtectedRoute>
+                <DataKegiatanBlud />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/subkegiatan-blud"
+            element={
+              <ProtectedRoute>
+                <SubKegiatanBlud />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/laporan-blud"
+            element={
+              <ProtectedRoute>
+                <LaporanBlud />
               </ProtectedRoute>
             }
           />
